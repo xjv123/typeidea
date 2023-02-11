@@ -11,7 +11,7 @@ class Link(models.Model):
         (STATUS_NORMAL, '正常'),
         (STATUS_DELETE, '删除'),
     )
-    Title = models.CharField(max_length=50, verbose_name='标题')
+    title = models.CharField(max_length=50, verbose_name='标题')
     href = models.URLField(verbose_name='链接')
 
     status = models.PositiveIntegerField(default=STATUS_NORMAL, choices=STATUS_ITEMS, verbose_name='状态')
@@ -19,6 +19,9 @@ class Link(models.Model):
                                          help_text='权重高展示顺序靠前')
     owner = models.ForeignKey(User, verbose_name='作者')
     created_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+
+    def __str__(self):
+        return self.title
 
     class Meta:
         verbose_name = verbose_name_plural = '友链'
@@ -44,6 +47,9 @@ class SideBar(models.Model):
     status = models.PositiveIntegerField(default=STATUS_SHOW, choices=STATUS_ITEMS, verbose_name='状态')
     owner = models.ForeignKey(User, verbose_name='作者')
     created_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+
+    def __str__(self):
+        return self.title
 
     class Meta:
         verbose_name = verbose_name_plural = '侧边栏'
