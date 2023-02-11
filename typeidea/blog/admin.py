@@ -20,8 +20,13 @@ class BaseOwnerAdmin(admin.ModelAdmin):
 
 @admin.register(Category)
 class CategoryAdmin(BaseOwnerAdmin):
-    list_display = ('name', 'status', 'is_nav', 'owner', 'created_time')
+    list_display = ('name', 'status', 'is_nav', 'owner', 'created_time', 'post_count')
     fields = ('name', 'status', 'is_nav')
+
+    def post_count(self, obj):
+        return obj.post_set.count()
+
+    post_count.short_description = '文章数量'
 
 
 @admin.register(Tag)
@@ -36,7 +41,7 @@ class PostAdmin(BaseOwnerAdmin):
         'title', 'category', 'owner', 'status', 'created_time', 'operator'
     ]
     list_display_links = []
-    list_filter = ['category', ]
+    list_filter = ['category', 'title']
     search_fields = ['title', 'category__name']
 
     actions_on_top = True
