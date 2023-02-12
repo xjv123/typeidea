@@ -100,3 +100,9 @@ class PostAdmin(BaseOwnerAdmin):
             '<a href="{}">编辑</a>',
             reverse('admin:blog_post_change', args=(obj.id,))
         )
+
+    class Media:
+        css = {
+            'all': ("https://cdn.bootcss.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css",),
+        }
+        js = ('https://cdn.bootcss.com/bootstrap/4.0.0-beta.2/js/bootstrap.bundle.js',)
