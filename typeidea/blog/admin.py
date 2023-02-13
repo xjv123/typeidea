@@ -4,9 +4,17 @@ from django.utils.html import format_html
 from typeidea.base_admin import BaseOwnerAdmin
 
 from .models import Category, Tag, Post
+from .adminforms import PostAdminForm
+from typeidea.custom_site import custom_site
 
 
 # Register your models here.
+
+class PostInline(admin.TabularInline):
+    fields = ('title', 'desc')
+    extra = 1
+    model = Post
+
 
 class CategoryNameIdFilter(admin.SimpleListFilter):
     title = '名称过滤器'
@@ -22,9 +30,10 @@ class CategoryNameIdFilter(admin.SimpleListFilter):
         return queryset
 
 
-@admin.register(Category)
+@admin.register(Category,site=custom_site)
 class CategoryAdmin(BaseOwnerAdmin):
     list_display = ('name', 'status', 'is_nav', 'owner', 'created_time', 'post_count')
+    inlines = [PostInline, ]
     fields = ('name', 'status', 'is_nav')
     list_filter = [CategoryNameIdFilter]
 
@@ -34,7 +43,7 @@ class CategoryAdmin(BaseOwnerAdmin):
     post_count.short_description = '文章数量'
 
 
-@admin.register(Tag)
+@admin.register(Tag,site=custom_site)
 class TagAdmin(BaseOwnerAdmin):
     list_display = ('name', 'status', 'created_time')
     fields = ('name', 'status')
@@ -54,8 +63,9 @@ class CategoryOwnerFilter(admin.SimpleListFilter):
         return queryset
 
 
-@admin.register(Post)
+@admin.register(Post, site=custom_site)
 class PostAdmin(BaseOwnerAdmin):
+    form = PostAdminForm
     list_display = [
         'title', 'category', 'owner', 'status', 'created_time', 'operator'
     ]
@@ -98,7 +108,7 @@ class PostAdmin(BaseOwnerAdmin):
     def operator(self, obj):
         return format_html(
             '<a href="{}">编辑</a>',
-            reverse('admin:blog_post_change', args=(obj.id,))
+            reverse('cus_admin:blog_post_change', args=(obj.id,))
         )
 
     class Media:
